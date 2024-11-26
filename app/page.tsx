@@ -1,3 +1,4 @@
+import LoginButton from "@/components/auth/LoginButton";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Ubuntu } from "next/font/google";
@@ -20,10 +21,13 @@ export default function Home() {
           🔒 Authentication
         </h1>
         <p className="text-white text-lg">A simple Authentication Service</p>
-
-        <Button variant="secondary" className="w-1/4 py-6 text-lg font-medium">
-          Sign in
-        </Button>
+        <div>
+          <LoginButton>
+            <Button variant="secondary" size="lg" className="font-medium">
+              Sign in
+            </Button>
+          </LoginButton>
+        </div>
       </div>
     </main>
   );
