@@ -17,7 +17,6 @@ import {
 } from "@/components/ui/form";
 
 import { Input } from "@/components/ui/input";
-import { Separator } from "../ui/separator";
 import FormError from "../FormError";
 import FormSuccess from "../FormSuccess";
 import { useState, useTransition } from "react";
@@ -127,8 +126,6 @@ export default function RegisterForm() {
           </Button>
         </form>
       </Form>
-
-      <Separator className="my-4" />
     </CardWrapper>
   );
 }
