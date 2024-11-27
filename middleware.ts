@@ -1,13 +1,41 @@
-import NextAuth from "next-auth"
-import authConfig from "./auth.config"
+import NextAuth from "next-auth";
+import authConfig from "./auth.config";
+import {
+  apiAuthPrefix,
+  authRoutes,
+  DEFAULT_LOGIN_REDIRECT,
+  publicRoutes,
+} from "./routes";
+import { NextResponse } from "next/server";
 
-export const { auth } = NextAuth(authConfig)
+export const { auth } = NextAuth(authConfig);
 
 export default auth((req) => {
+  const { nextUrl } = req;
   const isLoggedIn = !!req.auth;
-  console.log("ROUTE: ", req.nextUrl.pathname);
 
-  console.log("IS LOGGED IN: ", isLoggedIn);
+  const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix);
+  const isPublicRoute = publicRoutes.includes(nextUrl.pathname);
+  const isAuthRoute = authRoutes.includes(nextUrl.pathname);
+
+  if (isApiAuthRoute) {
+    return;
+  }
+
+  if (isAuthRoute) {
+    if (isLoggedIn) {
+      return NextResponse.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
+      // return NextResponse.redirect(new URL("/settings", nextUrl));
+      // The second argument to the URL constructor serves as the base URL. When the first argument (DEFAULT_LOGIN_REDIRECT) is a relative URL (like /login), the nextUrl provides the context for
+    }
+    return;
+  }
+
+  if (!isLoggedIn && !isPublicRoute) {
+    return NextResponse.redirect(new URL("/auth/login", nextUrl));
+  }
+
+  return;
 });
 
 export const config = {
