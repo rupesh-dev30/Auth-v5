@@ -101,6 +101,7 @@ export default function RegisterForm() {
             <FormField
               control={form.control}
               name="password"
+              
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Password</FormLabel>
@@ -109,6 +110,7 @@ export default function RegisterForm() {
                       placeholder="******"
                       {...field}
                       disabled={isPending}
+                      type="password"
                     />
                   </FormControl>
                   <FormMessage />

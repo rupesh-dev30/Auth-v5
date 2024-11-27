@@ -92,6 +92,7 @@ export default function LoginForm() {
                       placeholder="******"
                       {...field}
                       disabled={isPending}
+                      type="password"
                     />
                   </FormControl>
                   <FormMessage />
