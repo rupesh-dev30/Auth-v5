@@ -10,7 +10,7 @@ const ubuntu = Ubuntu({
 
 export default function Home() {
   return (
-    <main className="flex h-full items-center justify-center bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-sky-400 to-purple-500">
+    <main className="flex h-full items-center justify-center bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-white to-black">
       <div className="space-y-6 text-center">
         <h1
           className={cn(

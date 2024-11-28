@@ -54,8 +54,7 @@ export default function LoginForm() {
         if (data?.error) {
           setError(data.error);
         } else {
-          setSuccess("success");
-          // TODO : ADD When we add 2FA
+          setSuccess(data?.success);
         }
       });
     });
