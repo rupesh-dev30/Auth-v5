@@ -33,7 +33,6 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
     },
   });
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const verificationToken = await generateVerificationToken(email);
 
   await sendVerificationEmail(verificationToken.email, verificationToken.token);
