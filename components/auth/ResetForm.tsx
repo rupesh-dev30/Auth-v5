@@ -72,6 +72,7 @@ export default function ResetForm() {
                       placeholder="john.doe@example.com"
                       {...field}
                       disabled={isPending}
+                      type="email"
                     />
                   </FormControl>
                   <FormMessage />
