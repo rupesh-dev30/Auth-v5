@@ -44,10 +44,11 @@ export default function LoginForm() {
     defaultValues: {
       email: "",
       password: "",
+      code: ""
     },
   });
 
-  const onSubmit = (values: z.infer<typeof LoginSchema>) => {
+  const onSubmit = async (values: z.infer<typeof LoginSchema>) => {
     setError("");
     setSuccess("");
 
@@ -68,6 +69,7 @@ export default function LoginForm() {
             setShowTwoFactor(true);
           }
         })
+        // CHECK BUGGGGG
         // .catch(() => setError("Something went wrong"));
     });
   };
@@ -94,6 +96,7 @@ export default function LoginForm() {
                         placeholder="123456"
                         {...field}
                         disabled={isPending}
+                        type="number"
                       />
                     </FormControl>
                     <FormMessage />

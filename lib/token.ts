@@ -7,7 +7,8 @@ import { getTwoFactorTokenByEmail } from "@/data/twoFactorToken";
 
 export const generateTwoFactorToken = async (email: string) => {
   const token = crypto.randomInt(100_000, 1_000_000).toString();
-  const expiresAt = new Date(new Date().getTime() + 3600 * 1000);
+  // TODO : TWO FACTOR AUTHENTICATION CODE TOKEN TIMING
+  const expiresAt = new Date(new Date().getTime() + 5 * 60 * 1000);
 
   const exisitingToken = await getTwoFactorTokenByEmail(email);
 
@@ -32,8 +33,7 @@ export const generateTwoFactorToken = async (email: string) => {
 
 export const generatePasswordResetToken = async (email: string) => {
   const token = uuidv4();
-  // TODO : TWO FACTOR AUTHENTICATION CODE TOKEN TIMING
-  const expiresAt = new Date(new Date().getTime() + 5 * 60 * 1000);
+  const expiresAt = new Date(new Date().getTime() + 3600 * 1000);
 
   const exisitingToken = await getPasswordResetTokenByEmail(email);
 
