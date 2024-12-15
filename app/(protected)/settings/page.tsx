@@ -1,11 +1,8 @@
 "use client";
 
 import { logout } from "@/actions/logout";
-// import { useCurrentUser } from "@/hooks/useCurrentUser";
 
 export default function SettingPage() {
-  // const user = useCurrentUser();
-
   const onClick = () => {
     logout();
   };
