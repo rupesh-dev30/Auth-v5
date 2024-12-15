@@ -1,6 +1,6 @@
 "use client";
 
-import * as z from 'zod';
+import * as z from "zod";
 import { useForm } from "react-hook-form";
 import { useState, useTransition } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -34,7 +34,7 @@ import { Switch } from "@/components/ui/switch";
 
 export default function SettingPage() {
   const user = useCurrentUser();
-  
+
   const [error, setError] = useState<string | undefined>();
   const [success, setSuccess] = useState<string | undefined>();
   const { update } = useSession();
@@ -53,6 +53,8 @@ export default function SettingPage() {
   });
 
   const onSubmit = (values: z.infer<typeof SettingSchema>) => {
+    setSuccess("");
+    setError("");
     startTransition(() => {
       settings(values)
         .then((data) => {

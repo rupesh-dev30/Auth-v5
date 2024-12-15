@@ -73,7 +73,8 @@ export default function LoginForm() {
           setShowTwoFactor(true);
         }
       } catch {
-        setError("Something went wrong");
+        // setError("Something went wrong");
+        setError("");
       }
     });
   };
