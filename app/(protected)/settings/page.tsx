@@ -1,6 +1,6 @@
 "use client";
 
-import * as z from 'zod';
+import * as z from "zod";
 import { useForm } from "react-hook-form";
 import { useState, useTransition } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -34,7 +34,7 @@ import { Switch } from "@/components/ui/switch";
 
 export default function SettingPage() {
   const user = useCurrentUser();
-  
+
   const [error, setError] = useState<string | undefined>();
   const [success, setSuccess] = useState<string | undefined>();
   const { update } = useSession();
@@ -53,6 +53,8 @@ export default function SettingPage() {
   });
 
   const onSubmit = (values: z.infer<typeof SettingSchema>) => {
+    setError("");
+    setSuccess("");
     startTransition(() => {
       settings(values)
         .then((data) => {
@@ -187,16 +189,20 @@ export default function SettingPage() {
                   control={form.control}
                   name="isTwoFactorEnabled"
                   render={({ field }) => (
-                    <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
+                    <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm cursor-not-allowed">
                       <div className="space-y-0.5">
-                        <FormLabel>Two Factor Authentication</FormLabel>
-                        <FormDescription>
-                          Enable two factor authentication for your account
+                        <FormLabel className="cursor-not-allowed">
+                          Two Factor Authentication
+                        </FormLabel>
+                        <FormDescription className="text-red-800 font-extrabold">
+                          {/* Enable two factor authentication for your account. */}
+                          THIS FEATURES NOT AVAILABLE IN PRODUCTION
                         </FormDescription>
                       </div>
                       <FormControl>
                         <Switch
-                          disabled={isPending}
+                          // disabled={isPending}
+                          disabled
                           checked={field.value}
                           onCheckedChange={field.onChange}
                         />
