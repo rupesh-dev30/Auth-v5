@@ -1,8 +1,8 @@
 "use client";
 
+import * as z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
 import { useSearchParams } from "next/navigation";
 
 import { LoginSchema } from "@/schemas";
@@ -28,6 +28,8 @@ import Link from "next/link";
 
 export default function LoginForm() {
   const searchParams = useSearchParams();
+  const callbackUrl = searchParams?.get("callbackUrl");
+
   const urlError =
     searchParams.get("error") === "OAuthAccountNotLinked"
       ? "Email already in use with different provider!"
@@ -44,7 +46,7 @@ export default function LoginForm() {
     defaultValues: {
       email: "",
       password: "",
-      code: ""
+      code: "",
     },
   });
 
@@ -52,25 +54,27 @@ export default function LoginForm() {
     setError("");
     setSuccess("");
 
-    startTransition(() => {
-      login(values)
-        .then((data) => {
-          if (data?.error) {
-            form.reset();
-            setError(data.error);
-          }
+    startTransition(async () => {
+      try {
+        const data = await login(values, callbackUrl);
 
-          if (data?.success) {
-            form.reset();
-            setSuccess(data.success);
-          }
+        if (data?.error) {
+          form.reset();
+          setError(data.error);
+          return;
+        }
 
-          if (data?.twoFactor) {
-            setShowTwoFactor(true);
-          }
-        })
-        // CHECK BUGGGGG
-        // .catch(() => setError("Something went wrong"));
+        if (data?.success) {
+          form.reset();
+          setSuccess(data.success);
+        }
+
+        if (data?.twoFactor) {
+          setShowTwoFactor(true);
+        }
+      } catch {
+        setError("Something went wrong");
+      }
     });
   };
 
@@ -93,10 +97,9 @@ export default function LoginForm() {
                     <FormLabel>Two Factor Code</FormLabel>
                     <FormControl>
                       <Input
-                        placeholder="123456"
                         {...field}
+                        placeholder="123456"
                         disabled={isPending}
-                        type="number"
                       />
                     </FormControl>
                     <FormMessage />
@@ -114,10 +117,10 @@ export default function LoginForm() {
                       <FormLabel>Email</FormLabel>
                       <FormControl>
                         <Input
-                          placeholder="john.doe@example.com"
                           {...field}
-                          disabled={isPending}
                           type="email"
+                          placeholder="john.doe@example.com"
+                          disabled={isPending}
                         />
                       </FormControl>
                       <FormMessage />
@@ -132,10 +135,10 @@ export default function LoginForm() {
                       <FormLabel>Password</FormLabel>
                       <FormControl>
                         <Input
-                          placeholder="******"
                           {...field}
-                          disabled={isPending}
+                          placeholder="******"
                           type="password"
+                          disabled={isPending}
                         />
                       </FormControl>
                       <Button
@@ -158,7 +161,7 @@ export default function LoginForm() {
           <FormSuccess message={success} />
 
           <Button type="submit" className="w-full" disabled={isPending}>
-            {showTwoFactor ? "Confirm" : "Login"}
+            {isPending ? "Submitting..." : showTwoFactor ? "Confirm" : "Login"}
           </Button>
         </form>
       </Form>

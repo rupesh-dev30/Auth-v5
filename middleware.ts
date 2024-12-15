@@ -6,9 +6,8 @@ import {
   DEFAULT_LOGIN_REDIRECT,
   publicRoutes,
 } from "./routes";
-import { NextResponse } from "next/server";
 
-export const { auth } = NextAuth(authConfig);
+const { auth } = NextAuth(authConfig);
 
 export default auth((req) => {
   const { nextUrl } = req;
@@ -24,7 +23,7 @@ export default auth((req) => {
 
   if (isAuthRoute) {
     if (isLoggedIn) {
-      return NextResponse.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
+      return Response.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
       // return NextResponse.redirect(new URL("/settings", nextUrl));
       // The second argument to the URL constructor serves as the base URL. When the first argument (DEFAULT_LOGIN_REDIRECT) is a relative URL (like /login), the nextUrl provides the context for
     }
@@ -32,7 +31,15 @@ export default auth((req) => {
   }
 
   if (!isLoggedIn && !isPublicRoute) {
-    return NextResponse.redirect(new URL("/auth/login", nextUrl));
+    let callbackUrl = nextUrl.pathname;
+    if (nextUrl.search) {
+      callbackUrl += nextUrl.search;
+    }
+    const encodedCallbackUrl = encodeURIComponent(callbackUrl);
+
+    return Response.redirect(
+      new URL(`/auth/login?callbackUrl=${encodedCallbackUrl}`, nextUrl)
+    );
   }
 
   return;

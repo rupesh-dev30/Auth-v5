@@ -5,8 +5,14 @@ import authConfig from "@/auth.config";
 import { getUserById } from "./data/user";
 import { UserRole } from "@prisma/client";
 import { getTwoFactorConfirmationByUserId } from "./data/twoFactorConfirmation";
+import { getAccountByUserId } from "./data/account";
 
-export const { handlers, auth, signIn, signOut } = NextAuth({
+export const {
+  handlers,
+  auth,
+  signIn,
+  signOut,
+} = NextAuth({
   pages: {
     signIn: "/auth/login",
     error: "/auth/error",
@@ -24,7 +30,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       // Allow OAuth without email verification
       if (account?.provider !== "credentials") return true;
 
-      if (!user.id) return false;
+      // if (!user.id) return false;
 
       const exisitingUser = await getUserById(user.id);
 
@@ -60,6 +66,12 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         session.user.isTwoFactorEnabled = token.isTwoFactorEnabled as boolean;
       }
 
+      if (session.user) {
+        session.user.name = token.name;
+        session.user.email = token.email as string;
+        session.user.isOAuth = token.isOAuth as boolean;
+      }
+
       return session;
     },
     async jwt({ token }) {
@@ -69,6 +81,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
       if (!existingUser) return token;
 
+      const existingAccount = await getAccountByUserId(existingUser.id);
+
+      token.isOAuth = !!existingAccount;
+      token.name = existingUser.name;
+      token.email = existingUser.email;
       token.role = existingUser.role;
       token.isTwoFactorEnabled = existingUser.isTwoFactorEnabled;
 
